@@ -836,9 +836,9 @@
         categoria: headers.findIndex(h => h === 'categoria'),
         producto:  headers.findIndex(h => h === 'producto'),
         detalle:   headers.findIndex(h => h.includes('detalle') || h.includes('mix')),
-        p250:      headers.findIndex(h => h.includes('precio') && h.includes('250')),
-        p500:      headers.findIndex(h => h.includes('precio') && h.includes('500')),
-        p1000:     headers.findIndex(h => h.includes('precio') && h.includes('1')),
+        p250:      headers.findIndex(h => h === 'precio x 250gr'),
+        p500:      headers.findIndex(h => h === 'precio x 500gr'),
+        p1000:     headers.findIndex(h => h === 'precio x 1 kg'),
         destacado: headers.findIndex(h => h.includes('destac'))
       };
 
