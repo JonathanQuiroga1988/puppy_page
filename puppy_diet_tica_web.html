@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Puppy - Dietética Natural</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f4f8f4',
+              100: '#e5efe6',
+              200: '#cbdfcd',
+              500: '#438053',
+              600: '#32663f',
+              700: '#285133',
+              800: '#22412b',
+              900: '#1d3624',
+            },
+            warm: {
+              50: '#fdfbf7',
+              100: '#f7f3eb',
+              200: '#efe6d5',
+              800: '#382e25',
+              900: '#251e18',
+            },
+            accent: {
+              DEFAULT: '#d97706', // Ámbar miel
+              hover: '#b45309',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos adicionales suaves */
+    body {
+      background-color: #FAF8F5;
+      color: #2D2823;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .backdrop-blur-nav {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Bar Informativo -->
+  <div class="bg-brand-900 text-brand-100 text-xs sm:text-sm py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center bg-brand-500 text-white w-4 h-4 rounded-full text-[10px]">✓</span>
+        <span>Frutos secos seleccionados, mixes artesanales y productos naturales</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="#contacto" class="hover:text-white transition-colors flex items-center gap-1">
+          <i class="fa-solid fa-location-dot"></i> Puntos de entrega
+        </a>
+        <a href="https://wa.me/5491100000000" target="_blank" class="hover:text-white transition-colors flex items-center gap-1 font-semibold text-emerald-300">
+          <i class="fa-brands fa-whatsapp text-sm"></i> Pedidos por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de Navegación Principal -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-nav border-b border-warm-200 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      
+      <!-- Logotipo e Imagotipo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="relative w-12 h-12 rounded-xl bg-warm-100 p-1 border border-warm-200 shadow-sm overflow-hidden flex items-center justify-center">
+          <img 
+            src="https://lh3.googleusercontent.com/d/1l3Y4qIIJ11fchv-a7OyT2Ad8exnAHy9s" 
+            alt="Mascota Puppy Dietética" 
+            class="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-300"
+            onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/616/616408.png';"
+          />
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-extrabold text-2xl tracking-tight text-brand-900 leading-tight">
+            PUPPY
+          </span>
+          <span class="text-[11px] font-semibold uppercase tracking-widest text-brand-600 -mt-1">
+            Dietética Natural
+          </span>
+        </div>
+      </a>
+
+      <!-- Buscador en escritorio -->
+      <div class="hidden md:flex flex-1 max-w-md mx-6">
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <input 
+            type="text" 
+            id="desktopSearchInput" 
+            placeholder="Buscar almendras, mix brasilero, avena..." 
+            class="w-full pl-10 pr-4 py-2.5 rounded-full border border-stone-300 bg-stone-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm transition-all shadow-inner"
+            oninput="handleSearch(this.value)"
+          />
+          <button 
+            id="clearSearchBtn" 
+            onclick="clearSearch()" 
+            class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-600">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Acciones: Carrito y Contacto -->
+      <div class="flex items-center gap-3">
+        <a 
+          href="#contacto" 
+          class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-brand-800 hover:bg-brand-50 border border-brand-200 transition-colors">
+          <i class="fa-regular fa-envelope"></i>
+          <span>Contacto</span>
+        </a>
+
+        <!-- Botón Carrito con contador -->
+        <button 
+          onclick="toggleCartModal(true)" 
+          class="relative flex items-center gap-2.5 bg-brand-700 hover:bg-brand-800 active:scale-95 text-white px-4 py-2.5 rounded-full font-medium shadow-md shadow-brand-700/20 transition-all cursor-pointer">
+          <i class="fa-solid fa-basket-shopping text-base"></i>
+          <span class="hidden sm:inline text-sm font-semibold">Mi Carrito</span>
+          <span 
+            id="cartBadge" 
+            class="bg-amber-400 text-amber-950 text-xs font-black px-2 py-0.5 rounded-full shadow-sm">
+            0
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Buscador móvil -->
+    <div class="md:hidden px-4 pb-3">
+      <div class="relative w-full">
+        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+          <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </span>
+        <input 
+          type="text" 
+          id="mobileSearchInput" 
+          placeholder="Buscar producto o ingrediente..." 
+          class="w-full pl-9 pr-8 py-2 rounded-full border border-stone-300 bg-stone-50 focus:bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-inner"
+          oninput="handleSearch(this.value)"
+        />
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner Promocional -->
+  <section class="relative bg-gradient-to-br from-brand-900 via-brand-800 to-warm-900 text-white overflow-hidden py-10 sm:py-14 border-b border-brand-900/20">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+        
+        <!-- Texto Hero -->
+        <div class="max-w-2xl text-center md:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-4 backdrop-blur-sm border border-white/10">
+            <i class="fa-solid fa-leaf"></i> Venta fraccionada por 250g, 500g y 1kg
+          </div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display leading-tight text-white mb-3">
+            Calidad, frescura y sabor para tu día a día
+          </h1>
+          <p class="text-brand-100 text-sm sm:text-base mb-6 leading-relaxed">
+            Elegí la cantidad justa que necesitás. Armá tu carrito online y enviá tu pedido directamente a nuestro WhatsApp con un solo clic.
+          </p>
+          
+          <div class="flex flex-wrap items-center justify-center md:justify-start gap-3">
+            <a 
+              href="#catalogo" 
+              class="bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-6 py-3 rounded-full shadow-lg shadow-amber-500/30 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-store"></i> Ver Catálogo Completo
+            </a>
+            <button 
+              onclick="filterByCategory('MIX')" 
+              class="bg-white/10 hover:bg-white/20 text-white text-sm font-medium px-5 py-3 rounded-full backdrop-blur-sm border border-white/20 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-star text-amber-300"></i> Mixes Especiales Puppy
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjeta Visual Mascota -->
+        <div class="relative w-44 sm:w-56 md:w-64 aspect-square flex items-center justify-center">
+          <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-2xl animate-pulse"></div>
+          <div class="relative w-full h-full bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-2xl flex flex-col items-center justify-center text-center">
+            <img 
+              src="https://lh3.googleusercontent.com/d/1GLZwc7IIK_c9mqibiyXMAXPzz8Caq58J" 
+              alt="Logo Puppy" 
+              class="max-h-24 sm:max-h-28 object-contain drop-shadow-md mb-2"
+              onerror="this.onerror=null; this.src='https://lh3.googleusercontent.com/d/1l3Y4qIIJ11fchv-a7OyT2Ad8exnAHy9s';"
+            />
+            <span class="text-xs font-bold text-amber-300">Elaboración Propia</span>
+            <span class="text-[11px] text-stone-200">Mixes frescos todos los días</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra de Categorías (Filtros horizontales fijos al hacer scroll) -->
+  <nav class="sticky top-20 z-30 bg-warm-50/95 backdrop-blur-nav border-b border-warm-200 py-3 px-4 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      <div 
+        id="categoryContainer" 
+        class="flex items-center gap-2 overflow-x-auto custom-scroll py-1 w-full text-xs font-semibold">
+        <!-- Generado dinámicamente con JS -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenedor Principal: Catálogo -->
+  <main id="catalogo" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Encabezado de Sección y Contador de Resultados -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h2 id="currentCategoryTitle" class="text-2xl font-bold font-display text-brand-900">
+          Todos los Productos
+        </h2>
+        <p id="resultsCount" class="text-xs sm:text-sm text-stone-500 mt-0.5">
+          Cargando productos...
+        </p>
+      </div>
+
+      <!-- Filtro de orden -->
+      <div class="flex items-center gap-2 self-end sm:self-auto">
+        <label for="sortSelect" class="text-xs text-stone-500 font-medium">Ordenar por:</label>
+        <select 
+          id="sortSelect" 
+          onchange="handleSortChange(this.value)"
+          class="bg-white border border-stone-300 rounded-lg text-xs font-medium px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <option value="default">Recomendados</option>
+          <option value="name-asc">Nombre (A - Z)</option>
+          <option value="name-desc">Nombre (Z - A)</option>
+          <option value="price-asc">Menor precio</option>
+          <option value="price-desc">Mayor precio</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid de Productos -->
+    <div 
+      id="productsGrid" 
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
+      <!-- Las tarjetas se generan dinámicamente con JS -->
+    </div>
+
+    <!-- Estado Vacío (Sin resultados) -->
+    <div id="noResults" class="hidden text-center py-16 px-4">
+      <div class="w-16 h-16 bg-warm-200 rounded-full flex items-center justify-center mx-auto mb-4 text-warm-800 text-2xl">
+        <i class="fa-solid fa-seedling"></i>
+      </div>
+      <h3 class="text-lg font-bold text-stone-800 mb-1">No encontramos ese producto</h3>
+      <p class="text-sm text-stone-500 max-w-sm mx-auto mb-5">
+        Probá buscando con otro nombre, revisando la ortografía o navegá por las categorías disponibles.
+      </p>
+      <button 
+        onclick="resetFilters()" 
+        class="bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold px-5 py-2.5 rounded-full transition-colors">
+        Ver todos los productos
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Sección de Contacto e Información del Local -->
+  <section id="contacto" class="bg-warm-100 border-t border-warm-200 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">¿Tenés dudas o un pedido especial?</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold font-display text-brand-900 mt-1">
+          Estamos para ayudarte
+        </h2>
+        <p class="text-sm text-stone-600 mt-2">
+          Contactanos para consultar disponibilidad de productos por mayor, pedidos personalizados o entregas directas.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Tarjeta WhatsApp -->
+        <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mb-4">
+            <i class="fa-brands fa-whatsapp"></i>
+          </div>
+          <h3 class="font-bold text-base text-stone-800 mb-1">WhatsApp Directo</h3>
+          <p class="text-xs text-stone-500 mb-4">Atención ágil, cotizaciones y pedidos en el acto.</p>
+          <a 
+            href="https://wa.me/5491100000000?text=Hola%20Puppy%20Diet%C3%A9tica!%20Quer%C3%ADa%20hacerles%20una%20consulta." 
+            target="_blank" 
+            class="mt-auto w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors text-center">
+            Escribir por WhatsApp
+          </a>
+        </div>
+
+        <!-- Tarjeta Horarios & Entregas -->
+        <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-4">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <h3 class="font-bold text-base text-stone-800 mb-1">Horarios y Envíos</h3>
+          <p class="text-xs text-stone-500 mb-1">Lunes a Sábados: 09:00 a 19:30 hs</p>
+          <p class="text-xs text-stone-500 mb-4">Envíos a domicilio en la zona o retiro en tienda.</p>
+          <span class="mt-auto inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700 bg-brand-50 px-3 py-1.5 rounded-full border border-brand-200">
+            <i class="fa-solid fa-truck-fast"></i> Envíos coordinados
+          </span>
+        </div>
+
+        <!-- Tarjeta Mensaje Rápido -->
+        <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm flex flex-col">
+          <div class="flex items-center gap-2 mb-3">
+            <i class="fa-regular fa-paper-plane text-brand-600"></i>
+            <h3 class="font-bold text-base text-stone-800">Dejanos tu consulta</h3>
+          </div>
+          <form onsubmit="handleContactSubmit(event)" class="space-y-3 flex-1 flex flex-col">
+            <input 
+              type="text" 
+              id="contactName" 
+              placeholder="Tu nombre" 
+              required 
+              class="w-full text-xs px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+            <input 
+              type="text" 
+              id="contactPhone" 
+              placeholder="Teléfono / WhatsApp" 
+              required 
+              class="w-full text-xs px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+            <textarea 
+              id="contactMsg" 
+              rows="2" 
+              placeholder="¿Qué producto estás buscando?" 
+              required 
+              class="w-full text-xs px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none flex-1"
+            ></textarea>
+            <button 
+              type="submit" 
+              class="w-full py-2 bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold rounded-lg transition-colors">
+              Enviar consulta
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-brand-900 text-stone-300 py-8 px-4 border-t border-brand-800">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center">
+          <img 
+            src="https://lh3.googleusercontent.com/d/1l3Y4qIIJ11fchv-a7OyT2Ad8exnAHy9s" 
+            alt="Mascota" 
+            class="w-full h-full object-contain"
+            onerror="this.style.display='none'"
+          />
+        </div>
+        <div>
+          <p class="font-bold text-white text-sm">PUPPY DIETÉTICA</p>
+          <p class="text-stone-400 text-[11px]">Salud, bienestar y nutrición natural.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="#catalogo" class="hover:text-white transition-colors">Catálogo</a>
+        <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
+        <button onclick="openSyncModal()" class="hover:text-amber-300 text-stone-400 transition-colors flex items-center gap-1">
+          <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Actualizar Catálogo (CSV)
+        </button>
+      </div>
+
+      <p class="text-stone-400 text-[11px]">
+        © <span id="yearSpan"></span> Puppy Dietética. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <!-- MODAL DEL CARRITO (Slide-over lateral) -->
+  <div id="cartModal" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <!-- Fondo oscuro -->
+    <div 
+      onclick="toggleCartModal(false)" 
+      class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs transition-opacity duration-300"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        
+        <!-- Header Carrito -->
+        <div class="p-5 bg-warm-50 border-b border-warm-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-bold">
+              <i class="fa-solid fa-basket-shopping"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-stone-800 text-base">Mi Carrito de Compras</h3>
+              <p id="cartItemsCountText" class="text-xs text-stone-500">0 productos seleccionados</p>
+            </div>
+          </div>
+          <button 
+            onclick="toggleCartModal(false)" 
+            class="text-stone-400 hover:text-stone-700 p-2 rounded-lg text-lg">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Lista de Items en Carrito -->
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-5 divide-y divide-stone-100 custom-scroll">
+          <!-- Items generados por JS -->
+        </div>
+
+        <!-- Footer / Checkout Carrito -->
+        <div class="p-5 bg-warm-50 border-t border-warm-200 space-y-4">
+          
+          <!-- Tipo de Entrega -->
+          <div>
+            <label class="block text-xs font-bold text-stone-700 mb-1.5">Método de entrega:</label>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="flex items-center gap-2 p-2 rounded-lg border border-stone-200 bg-white text-xs cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
+                <input type="radio" name="deliveryMethod" value="Retiro en local" checked class="text-brand-600 focus:ring-brand-500" onchange="updateCartSummary()">
+                <span class="font-medium text-stone-700">Retiro en local</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-lg border border-stone-200 bg-white text-xs cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
+                <input type="radio" name="deliveryMethod" value="Envío a domicilio" class="text-brand-600 focus:ring-brand-500" onchange="updateCartSummary()">
+                <span class="font-medium text-stone-700">Envío a domicilio</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Datos del cliente -->
+          <div class="space-y-2">
+            <input 
+              type="text" 
+              id="orderCustomerName" 
+              placeholder="Tu nombre y apellido *" 
+              class="w-full text-xs px-3 py-2 rounded-lg border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+            <input 
+              type="text" 
+              id="orderAddress" 
+              placeholder="Dirección o barrio (si es con envío)" 
+              class="w-full text-xs px-3 py-2 rounded-lg border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+          </div>
+
+          <!-- Total -->
+          <div class="pt-2 border-t border-stone-200 flex items-center justify-between">
+            <span class="text-sm font-bold text-stone-700">Total estimado:</span>
+            <span id="cartTotalText" class="text-2xl font-black font-display text-brand-900">$0</span>
+          </div>
+
+          <!-- Botón de Envío por WhatsApp -->
+          <button 
+            id="btnSendOrder" 
+            onclick="sendOrderViaWhatsApp()" 
+            class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Confirmar Pedido por WhatsApp</span>
+          </button>
+
+          <button 
+            onclick="clearCart()" 
+            class="w-full text-center text-xs text-stone-400 hover:text-red-600 transition-colors pt-1">
+            Vaciar carrito
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA ACTUALIZAR O SINCRONIZAR CSV -->
+  <div id="syncModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs">
+    <div class="bg-white max-w-lg w-full rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-stone-800 text-lg flex items-center gap-2">
+          <i class="fa-solid fa-file-csv text-brand-600"></i> Actualizar Catálogo desde Google Sheets
+        </h3>
+        <button onclick="closeSyncModal()" class="text-stone-400 hover:text-stone-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-stone-600 leading-relaxed">
+        Podés actualizar los precios o agregar nuevos productos descargando tu Google Sheet en formato CSV:
+        <br>
+        <strong>Archivo → Descargar → Valores separados por comas (.csv)</strong> y luego subirlo aquí.
+      </p>
+
+      <div class="border-2 border-dashed border-stone-300 rounded-xl p-6 text-center hover:border-brand-500 transition-colors bg-stone-50">
+        <i class="fa-solid fa-cloud-arrow-up text-3xl text-stone-400 mb-2"></i>
+        <p class="text-xs font-semibold text-stone-700 mb-1">Arrastrá tu archivo CSV o hacé clic para buscar</p>
+        <p class="text-[11px] text-stone-400 mb-3">Puppy - Dietética (Consolidado).csv</p>
+        <input 
+          type="file" 
+          id="csvFileInput" 
+          accept=".csv" 
+          class="hidden" 
+          onchange="handleCSVUpload(event)"
+        />
+        <button 
+          type="button" 
+          onclick="document.getElementById('csvFileInput').click()" 
+          class="px-4 py-2 bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold rounded-lg transition-colors">
+          Seleccionar Archivo CSV
+        </button>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button 
+          onclick="closeSyncModal()" 
+          class="px-4 py-2 text-xs font-semibold text-stone-600 hover:bg-stone-100 rounded-lg">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div 
+    id="toastNotification" 
+    class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-stone-900 text-white text-xs sm:text-sm font-semibold px-4 py-3 rounded-xl shadow-xl flex items-center gap-3">
+    <span class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs">
+      <i class="fa-solid fa-check"></i>
+    </span>
+    <span id="toastMessage">Producto agregado al carrito</span>
+  </div>
+
+  <!-- JAVASCRIPT: LÓGICA DE LA DIETÉTICA -->
+  <script>
+    // Configuración general
+    const STORE_WHATSAPP = "5491100000000"; // Reemplazar con el número real de WhatsApp de Puppy
+    document.getElementById('yearSpan').textContent = new Date().getFullYear();
+
+    // DATOS DE PRODUCTOS EXTRAÍDOS DE LA PLANILLA DE GOOGLE SHEETS
+    // Columnas requeridas: Categoria, Producto, Contenido del Mix / Detalle, Precio x 250gr, Precio x 500gr, Precio x 1 kg
+    const DEFAULT_PRODUCTS = [
+      // MIXES (Elaboración Propia con Detalles de Ingredientes)
+      {
+        id: "mix-1",
+        categoria: "MIX",
+        producto: "MIX SEMILLAS",
+        detalle: "Lino, chía, girasol pelado y sésamo integral.",
+        p250: 3800,
+        p500: 7000,
+        p1000: 12200,
+        destacado: true
+      },
+      {
+        id: "mix-2",
+        categoria: "MIX",
+        producto: "MIX CON BANANA",
+        detalle: "Almendras, pasa de uva jumbo, pasa de uva rubia, nueces extra light, maní sin sal y banana chips.",
+        p250: 4000,
+        p500: 7400,
+        p1000: 12700,
+        destacado: true
+      },
+      {
+        id: "mix-3",
+        categoria: "MIX",
+        producto: "MIX BRASILERO",
+        detalle: "Pasas, nuez, almendras, maní, banana, coco en escamas y ananá.",
+        p250: 5000,
+        p500: 9300,
+        p1000: 16000,
+        destacado: true
+      },
+      {
+        id: "mix-4",
+        categoria: "MIX",
+        producto: "MIX EUROPEO",
+        detalle: "Pasas de uva, nuez, almendras y castañas de cajú.",
+        p250: 6300,
+        p500: 11600,
+        p1000: 20000,
+        destacado: true
+      },
+      {
+        id: "mix-5",
+        categoria: "MIX",
+        producto: "MIX CON ARÁNDANOS",
+        detalle: "Nueces extra light, almendras, avellanas, pasa de uva jumbo, arándanos y coco en escamas.",
+        p250: 7300,
+        p500: 13500,
+        p1000: 23400,
+        destacado: true
+      },
+      {
+        id: "mix-6",
+        categoria: "MIX",
+        producto: "MIX PREMIUM PUPPY",
+        detalle: "Pistacho, nuez, almendra, castaña, banana, pasas, maní sin sal y avellanas.",
+        p250: 8400,
+        p500: 15400,
+        p1000: 26700,
+        destacado: true
+      },
+      {
+        id: "mix-7",
+        categoria: "MIX",
+        producto: "MIX ENERGÉTICO",
+        detalle: "Higos, ciruelas, almendras, avellanas, chips de chocolate, pasa de uva y castaña de cajú.",
+        p250: 7500,
+        p500: 13900,
+        p1000: 24000,
+        destacado: true
+      },
+      {
+        id: "mix-8",
+        categoria: "MIX",
+        producto: "MIX TROPICAL",
+        detalle: "Ananá glaseado, nueces, pera, maní sin sal y pasas de uva jumbo.",
+        p250: 8400,
+        p500: 15400,
+        p1000: 26700,
+        destacado: true
+      },
+      {
+        id: "mix-9",
+        categoria: "MIX",
+        producto: "MIX DE FRUTAS DESHIDRATADAS",
+        detalle: "Ciruela, higo, pera, banana, dátiles, ananá y durazno.",
+        p250: 3800,
+        p500: 7000,
+        p1000: 12000,
+        destacado: true
+      },
+      {
+        id: "mix-10",
+        categoria: "MIX",
+        producto: "MIX CERVECERO",
+        detalle: "Maní salado, maíz frito crocante, girasol, semilla de zapallo y maní crocante.",
+        p250: 4500,
+        p500: 8200,
+        p1000: 14500,
+        destacado: true
+      },
+
+      // FRUTOS SECOS
+      { id: "fs-1", categoria: "Frutos secos", producto: "Almendras", detalle: "Almendras seleccionadas enteras de primera calidad.", p250: 9600, p500: 17700, p1000: 30700 },
+      { id: "fs-2", categoria: "Frutos secos", producto: "Nuez mariposa extra", detalle: "Nuez mariposa clara partida a mano.", p250: 8000, p500: 14700, p1000: 25400 },
+      { id: "fs-3", categoria: "Frutos secos", producto: "Castañas de caju", detalle: "Castañas tostadas sin sal, textura suave y crocante.", p250: 8900, p500: 16400, p1000: 28300 },
+      { id: "fs-4", categoria: "Frutos secos", producto: "Pistacho salado", detalle: "Pistachos con cáscara tostados al punto justo de sal.", p250: 16900, p500: 31200, p1000: 54000 },
+      { id: "fs-5", categoria: "Frutos secos", producto: "Avellana pelada", detalle: "Avellanas enteras sin piel listas para consumir.", p250: 13000, p500: 23900, p1000: 41400 },
+      { id: "fs-6", categoria: "Frutos secos", producto: "Bananitas chips", detalle: "Chips crocantes de banana ligeramente endulzados.", p250: 5000, p500: 9300, p1000: 16000 },
+      { id: "fs-7", categoria: "Frutos secos", producto: "Ciruela sin carozo", detalle: "Ciruelas tiernas carnosas y dulces sin carozo.", p250: 3600, p500: 6700, p1000: 11500 },
+      { id: "fs-8", categoria: "Frutos secos", producto: "Pasa de uva jumbo", detalle: "Pasas de uva negras tamaño grande extra jugosas.", p250: 3800, p500: 7000, p1000: 12000 },
+      { id: "fs-9", categoria: "Frutos secos", producto: "Pasa de uva rubia", detalle: "Pasas doradas seleccionadas de sabor suave.", p250: 3700, p500: 6800, p1000: 11800 },
+      { id: "fs-10", categoria: "Frutos secos", producto: "Pasa de uva sultanina", detalle: "Pasas pequeñas sin semilla para cocina y granola.", p250: 2300, p500: 4300, p1000: 7400 },
+      { id: "fs-11", categoria: "Frutos secos", producto: "Tomate seco", detalle: "Tomates deshidratados al sol para hidratar y aderezar.", p250: 7500, p500: 13800, p1000: 23900 },
+      { id: "fs-12", categoria: "Frutos secos", producto: "Nuez con cáscara", detalle: "Nueces frescas de cosecha con cáscara.", p250: 3800, p500: 6900, p1000: 11900 },
+
+      // HARINAS
+      { id: "har-1", categoria: "Harinas", producto: "Avena fina", detalle: "Copos molidos finos, ideal para panqueques y batidos.", p250: 1000, p500: 1800, p1000: 3100 },
+      { id: "har-2", categoria: "Harinas", producto: "Avena gruesa tradicional", detalle: "Copos de avena enteros prensados.", p250: 1000, p500: 1800, p1000: 3100 },
+      { id: "har-3", categoria: "Harinas", producto: "Avena instantánea", detalle: "Precocida y lista para disolver en yogur o leche.", p250: 900, p500: 1700, p1000: 2800 },
+      { id: "har-4", categoria: "Harinas", producto: "Harina de almendras pura", detalle: "100% harina fina de almendras sin gluten.", p250: 1900, p500: 3500, p1000: 6000 },
+      { id: "har-5", categoria: "Harinas", producto: "Harina de coco", detalle: "Alta en fibra y baja en carbohidratos.", p250: 2100, p500: 3800, p1000: 6600 },
+      { id: "har-6", categoria: "Harinas", producto: "Harina de avena", detalle: "Harina suave y nutritiva para repostería saludable.", p250: 900, p500: 1600, p1000: 2700 },
+      { id: "har-7", categoria: "Harinas", producto: "Harina de garbanzo", detalle: "Ideal para fainá y masas saladas sin TACC.", p250: 600, p500: 1000, p1000: 1800 },
+      { id: "har-8", categoria: "Harinas", producto: "Harina de algarroba", detalle: "Sustituto natural del cacao, rica en calcio.", p250: 3000, p500: 5400, p1000: 9400 },
+      { id: "har-9", categoria: "Harinas", producto: "Harina integral fina", detalle: "Molienda completa con todo el salvado y germen.", p250: 500, p500: 900, p1000: 1500 },
+      { id: "har-10", categoria: "Harinas", producto: "Almidón de mandioca", detalle: "Esencial para chipá y masas elásticas.", p250: 1200, p500: 2100, p1000: 3600 },
+      { id: "har-11", categoria: "Harinas", producto: "Harina de trigo sarraceno", detalle: "Grano sarraceno molido para panes nutritivos.", p250: 2800, p500: 5000, p1000: 8700 },
+      { id: "har-12", categoria: "Harinas", producto: "Salvado de avena", detalle: "Pura fibra soluble para el tránsito digestivo.", p250: 1000, p500: 1800, p1000: 3100 },
+
+      // SEMILLAS
+      { id: "sem-1", categoria: "Semillas", producto: "Semillas de Chía", detalle: "Fuente natural de Omega 3 y mucílago saciante.", p250: 2000, p500: 3600, p1000: 6200 },
+      { id: "sem-2", categoria: "Semillas", producto: "Semillas de Lino dorado / marrón", detalle: "Ideales para activar o moler en licuados.", p250: 1300, p500: 2400, p1000: 4200 },
+      { id: "sem-3", categoria: "Semillas", producto: "Girasol pelado confitero", detalle: "Semillas tiernas listas para ensaladas y panes.", p250: 1900, p500: 3500, p1000: 6000 },
+      { id: "sem-4", categoria: "Semillas", producto: "Semillas de Zapallo peladas", detalle: "Ricas en zinc y magnesio, crocantes.", p250: 6300, p500: 11600, p1000: 20000 },
+      { id: "sem-5", categoria: "Semillas", producto: "Sésamo blanco pelado", detalle: "Rico en calcio vegetal, perfecto para panes y woks.", p250: 3700, p500: 6800, p1000: 11800 },
+      { id: "sem-6", categoria: "Semillas", producto: "Sésamo integral tostado", detalle: "Con su cáscara original nutritiva.", p250: 1500, p500: 2800, p1000: 4800 },
+      { id: "sem-7", categoria: "Semillas", producto: "Sésamo negro", detalle: "Aroma intenso y alto valor antioxidante.", p250: 5000, p500: 9200, p1000: 15900 },
+      { id: "sem-8", categoria: "Semillas", producto: "Quinoa blanca perlada", detalle: "Proteína vegetal completa, fácil cocción.", p250: 2800, p500: 5000, p1000: 8700 },
+      { id: "sem-9", categoria: "Semillas", producto: "Semillas de Amapola", detalle: "Para budines de limón y panadería gourmet.", p250: 7100, p500: 13100, p1000: 22700 },
+
+      // LEGUMBRES
+      { id: "leg-1", categoria: "Legumbres", producto: "Lentejas seleccionadas", detalle: "De rápida cocción y alto contenido de hierro.", p250: 1300, p500: 2400, p1000: 4200 },
+      { id: "leg-2", categoria: "Legumbres", producto: "Lentejón", detalle: "Grano grande y carnoso para guisados tradicionales.", p250: 1500, p500: 2700, p1000: 4700 },
+      { id: "leg-3", categoria: "Legumbres", producto: "Garbanzos", detalle: "Textura tierna para hummus casero y guisados.", p250: 1000, p500: 1700, p1000: 3000 },
+      { id: "leg-4", categoria: "Legumbres", producto: "Poroto negro", detalle: "Ideales para feijoada, ensaladas y tacos.", p250: 1200, p500: 2200, p1000: 3800 },
+      { id: "leg-5", categoria: "Legumbres", producto: "Poroto colorado", detalle: "Textura cremosa y gran sabor para sopas.", p250: 1800, p500: 3200, p1000: 5500 },
+      { id: "leg-6", categoria: "Legumbres", producto: "Poroto alubia", detalle: "Poroto blanco clásico para guisos y ensaladas frías.", p250: 1600, p500: 3000, p1000: 5100 },
+      { id: "leg-7", categoria: "Legumbres", producto: "Poroto Aduki", detalle: "Gran aporte digestivo y depurativo.", p250: 1100, p500: 2000, p1000: 3500 },
+      { id: "leg-8", categoria: "Legumbres", producto: "Soja texturizada", detalle: "Reemplazo de carne molida para rellenos y empanadas.", p250: 1000, p500: 1800, p1000: 3100 },
+      { id: "leg-9", categoria: "Legumbres", producto: "Arroz Yamaní integral", detalle: "Arroz integral de grano medio, digestivo y sabroso.", p250: 1200, p500: 2100, p1000: 3600 },
+
+      // YUYOS Y HIERBAS
+      { id: "yuy-1", categoria: "Yuyos y Hierbas", producto: "Manzanilla en flor", detalle: "Flores enteras relajantes y digestivas para infusión.", p250: 13000, p500: 23900, p1000: 41400 },
+      { id: "yuy-2", categoria: "Yuyos y Hierbas", producto: "Boldo seleccionado", detalle: "Hojas para té digestivo y protector hepático.", p250: 7500, p500: 13900, p1000: 24000 },
+      { id: "yuy-3", categoria: "Yuyos y Hierbas", producto: "Burrito serrano", detalle: "Sabor refrescante para agregar al mate.", p250: 9200, p500: 17000, p1000: 29400 },
+      { id: "yuy-4", categoria: "Yuyos y Hierbas", producto: "Cedrón en hojas", detalle: "Aroma cítrico relajante ideal para la noche.", p250: 8400, p500: 15400, p1000: 26700 },
+      { id: "yuy-5", categoria: "Yuyos y Hierbas", producto: "Menta en hojas", detalle: "Frescura pura para infusiones frías o calientes.", p250: 3200, p500: 5800, p1000: 10000 },
+      { id: "yuy-6", categoria: "Yuyos y Hierbas", producto: "Lavanda aromática", detalle: "Flores de lavanda pura para relax y aromaterapia.", p250: 20000, p500: 37000, p1000: 64000 },
+      { id: "yuy-7", categoria: "Yuyos y Hierbas", producto: "Té verde en hebras", detalle: "Potente antioxidante natural y energizante.", p250: 3400, p500: 6200, p1000: 10700 },
+      { id: "yuy-8", categoria: "Yuyos y Hierbas", producto: "Moringa pura", detalle: "Superalimento rico en vitaminas y minerales.", p250: 11300, p500: 20800, p1000: 36000 },
+      { id: "yuy-9", categoria: "Yuyos y Hierbas", producto: "Mix de yuyos para mate", detalle: "Mezcla digestiva de cedrón, burrito, menta y poleo.", p250: 2100, p500: 3900, p1000: 6700 },
+
+      // DESHIDRATADOS
+      { id: "des-1", categoria: "Deshidratados", producto: "Coco rallado fino", detalle: "Coco puro deshidratado sin azúcar añadida.", p250: 4000, p500: 7400, p1000: 12700 },
+      { id: "des-2", categoria: "Deshidratados", producto: "Coco en escamas", detalle: "Cintas de coco natural ideales para tostar y desayunos.", p250: 9000, p500: 16600, p1000: 28700 },
+      { id: "des-3", categoria: "Deshidratados", producto: "Dátiles con carozo", detalle: "Dátiles dulces naturales para endulzar masas.", p250: 2800, p500: 5000, p1000: 8700 },
+      { id: "des-4", categoria: "Deshidratados", producto: "Arándanos rojos deshidratados", detalle: "Arándanos enteros tiernos y agridulces.", p250: 6300, p500: 11600, p1000: 20000 },
+      { id: "des-5", categoria: "Deshidratados", producto: "Empaque mixto frutal", detalle: "Pera, ciruela y durazno deshidratado.", p250: 4200, p500: 7700, p1000: 13400 },
+
+      // SNACKS Y CEREALES
+      { id: "snk-1", categoria: "Snacks", producto: "Almendras con chocolate", detalle: "Almendras tostadas cubiertas con chocolate semiamargo.", p250: 15700, p500: 28900, p1000: 50000 },
+      { id: "snk-2", categoria: "Snacks", producto: "Maní con chocolate", detalle: "Clásico maní tostado bañado en chocolate.", p250: 6300, p500: 11600, p1000: 20000 },
+      { id: "snk-3", categoria: "Snacks", producto: "Pasas de uva con chocolate", detalle: "Pasas dulces con cobertura chocolatosa.", p250: 9400, p500: 17400, p1000: 30000 },
+      { id: "snk-4", categoria: "Snacks", producto: "Chips de chocolate negro", detalle: "Gotas de chocolate para repostería resistente a horno.", p250: 4200, p500: 7700, p1000: 13400 },
+      { id: "snk-5", categoria: "Snacks", producto: "Maní tostado sin sal", detalle: "Maní pelado sin sodio, crocante y natural.", p250: 1300, p500: 2400, p1000: 4200 },
+      { id: "snk-6", categoria: "Snacks", producto: "Garrapiñadas de maní", detalle: "Maní acaramelado crujiente recién elaborado.", p250: 1600, p500: 3000, p1000: 5100 },
+      { id: "cer-1", categoria: "Cereales", producto: "Granola artesanal con miel", detalle: "Avena crocante, pasas, semillas y toque de miel.", p250: 2400, p500: 4400, p1000: 7500 },
+      { id: "cer-2", categoria: "Cereales", producto: "Almohaditas rellenas de avellana", detalle: "Cereal crujiente con centro cremoso de avellanas.", p250: 2800, p500: 5000, p1000: 9800 },
+      { id: "cer-3", categoria: "Cereales", producto: "Copos de maíz sin azúcar", detalle: "Corn flakes tradicionales sin endulzantes.", p250: 1900, p500: 3500, p1000: 6000 },
+      { id: "cer-4", categoria: "Cereales", producto: "Tutucas dulces", detalle: "Maíz inflado dulce tradicional argentino.", p250: 1800, p500: 3400, p1000: 5800 },
+
+      // CONDIMENTOS
+      { id: "cnd-1", categoria: "Condimentos", producto: "Cúrcuma molida pura", detalle: "Color y potente poder antiinflamatorio para tus comidas.", p250: 3500, p500: 6400, p1000: 11100 },
+      { id: "cnd-2", categoria: "Condimentos", producto: "Pimentón ahumado especial", detalle: "Aroma y sabor ahumado intenso para carnes y guisos.", p250: 1800, p500: 3400, p1000: 5800 },
+      { id: "cnd-3", categoria: "Condimentos", producto: "Orégano seleccionado", detalle: "Hojas secas limpias de intenso aroma serrano.", p250: 2700, p500: 5000, p1000: 8700 },
+      { id: "cnd-4", categoria: "Condimentos", producto: "Pimienta negra en grano", detalle: "Granos enteros para moler en el momento.", p250: 5500, p500: 10100, p1000: 17500 },
+      { id: "cnd-5", categoria: "Condimentos", producto: "Sal rosada del Himalaya", detalle: "Sal mineral de montaña pura sin refinar.", p250: 1200, p500: 2200, p1000: 3800 }
+    ];
+
+    // ESTADO DE LA APLICACIÓN
+    let allProducts = [...DEFAULT_PRODUCTS];
+    let selectedCategory = "TODOS";
+    let searchQuery = "";
+    let sortCriteria = "default";
+    let cart = []; // Estructura: [{ id, producto, categoria, weight: 250|500|1000, price: Number, quantity: Number }]
+    let selectedWeights = {}; // Guarda la selección de peso por producto en vista { productId: 250|500|1000 }
+
+    // Íconos por categoría
+    const categoryIcons = {
+      "TODOS": "fa-border-all",
+      "MIX": "fa-star",
+      "Frutos secos": "fa-apple-whole",
+      "Harinas": "fa-wheat-awn",
+      "Semillas": "fa-seedling",
+      "Legumbres": "fa-bowl-rice",
+      "Yuyos y Hierbas": "fa-spa",
+      "Deshidratados": "fa-sun",
+      "Snacks": "fa-cookie-bite",
+      "Cereales": "fa-bowl-food",
+      "Condimentos": "fa-pepper-hot"
+    };
+
+    // INICIALIZACIÓN
+    window.addEventListener('DOMContentLoaded', () => {
+      // Recuperar carrito guardado en memoria de sesión si existiese
+      try {
+        const savedCart = sessionStorage.getItem('puppy_cart');
+        if (savedCart) {
+          cart = JSON.parse(savedCart);
+        }
+      } catch (e) {}
+
+      renderCategories();
+      renderProducts();
+      updateCartSummary();
+    });
+
+    // RENDERIZADO DE CATEGORÍAS
+    function renderCategories() {
+      const container = document.getElementById('categoryContainer');
+      const uniqueCategories = ["TODOS", ...new Set(allProducts.map(p => p.categoria))];
+      
+      container.innerHTML = uniqueCategories.map(cat => {
+        const isActive = selectedCategory === cat;
+        const icon = categoryIcons[cat] || 'fa-tag';
+        const isSpecialMix = cat === 'MIX';
+
+        let badgeClasses = isActive 
+          ? 'bg-brand-800 text-white shadow-md' 
+          : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200';
+
+        if (isSpecialMix && !isActive) {
+          badgeClasses = 'bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100';
+        }
+
+        return `
+          <button 
+            onclick="filterByCategory('${cat}')" 
+            class="whitespace-nowrap px-4 py-2 rounded-full transition-all flex items-center gap-1.5 ${badgeClasses} cursor-pointer">
+            <i class="fa-solid ${icon} ${isSpecialMix && !isActive ? 'text-amber-600' : ''}"></i>
+            <span>${cat === 'MIX' ? 'Mixes Especiales' : cat}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // FILTRADO POR CATEGORÍA
+    function filterByCategory(cat) {
+      selectedCategory = cat;
+      renderCategories();
+      
+      const titleEl = document.getElementById('currentCategoryTitle');
+      titleEl.textContent = cat === 'TODOS' ? 'Todos los Productos' : (cat === 'MIX' ? 'Mixes Especiales Puppy' : cat);
+      
+      renderProducts();
+
+      // Scroll suave al catálogo si se hace clic desde el banner
+      const catalogEl = document.getElementById('catalogo');
+      if (catalogEl && window.scrollY > 300) {
+        catalogEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // MANEJO DE BÚSQUEDA
+    function handleSearch(query) {
+      searchQuery = query.toLowerCase().trim();
+      
+      // Sincronizar inputs desktop y mobile
+      document.getElementById('desktopSearchInput').value = query;
+      document.getElementById('mobileSearchInput').value = query;
+      
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (query.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      renderProducts();
+    }
+
+    function clearSearch() {
+      handleSearch('');
+    }
+
+    // MANEJO DE ORDEN
+    function handleSortChange(sortVal) {
+      sortCriteria = sortVal;
+      renderProducts();
+    }
+
+    function resetFilters() {
+      selectedCategory = "TODOS";
+      searchQuery = "";
+      document.getElementById('desktopSearchInput').value = "";
+      document.getElementById('mobileSearchInput').value = "";
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      renderCategories();
+      renderProducts();
+    }
+
+    // SELECCIÓN DE PESO EN CADA TARJETA
+    function setProductWeight(productId, weight) {
+      selectedWeights[productId] = weight;
+      
+      // Actualizar visualmente la tarjeta específica
+      const card = document.getElementById(`product-card-${productId}`);
+      if (!card) return;
+
+      const product = allProducts.find(p => p.id === productId);
+      if (!product) return;
+
+      const price = getPriceForWeight(product, weight);
+      const priceDisplay = card.querySelector('.price-display');
+      if (priceDisplay) {
+        priceDisplay.textContent = formatCurrency(price);
+      }
+
+      // Actualizar estado activo de los botones de peso
+      const weightButtons = card.querySelectorAll('.weight-btn');
+      weightButtons.forEach(btn => {
+        const btnWeight = parseInt(btn.getAttribute('data-weight'), 10);
+        if (btnWeight === weight) {
+          btn.className = "weight-btn flex-1 py-1.5 text-xs font-bold rounded-lg bg-brand-700 text-white shadow-xs transition-all";
+        } else {
+          btn.className = "weight-btn flex-1 py-1.5 text-xs font-semibold rounded-lg text-stone-600 hover:bg-stone-100 transition-all";
+        }
+      });
+    }
+
+    function getPriceForWeight(product, weight) {
+      if (weight === 250) return product.p250;
+      if (weight === 500) return product.p500;
+      if (weight === 1000) return product.p1000;
+      return product.p250;
+    }
+
+    function formatCurrency(amount) {
+      return `$${amount.toLocaleString('es-AR')}`;
+    }
+
+    // RENDERIZADO DEL CATÁLOGO DE PRODUCTOS
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      const noResults = document.getElementById('noResults');
+      const countEl = document.getElementById('resultsCount');
+
+      // Filtrar
+      let filtered = allProducts.filter(item => {
+        const matchesCategory = selectedCategory === "TODOS" || item.categoria === selectedCategory;
+        const matchesQuery = searchQuery === "" || 
+          item.producto.toLowerCase().includes(searchQuery) ||
+          (item.detalle && item.detalle.toLowerCase().includes(searchQuery)) ||
+          item.categoria.toLowerCase().includes(searchQuery);
+
+        return matchesCategory && matchesQuery;
+      });
+
+      // Ordenar
+      filtered.sort((a, b) => {
+        const weightA = selectedWeights[a.id] || 250;
+        const weightB = selectedWeights[b.id] || 250;
+        const priceA = getPriceForWeight(a, weightA);
+        const priceB = getPriceForWeight(b, weightB);
+
+        if (sortCriteria === 'name-asc') return a.producto.localeCompare(b.producto);
+        if (sortCriteria === 'name-desc') return b.producto.localeCompare(a.producto);
+        if (sortCriteria === 'price-asc') return priceA - priceB;
+        if (sortCriteria === 'price-desc') return priceB - priceA;
+        return 0; // default
+      });
+
+      countEl.textContent = `Mostrando ${filtered.length} productos`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      noResults.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(product => {
+        const currentWeight = selectedWeights[product.id] || 250;
+        const currentPrice = getPriceForWeight(product, currentWeight);
+        const isMix = product.categoria === 'MIX';
+
+        return `
+          <div 
+            id="product-card-${product.id}" 
+            class="bg-white rounded-2xl border border-stone-200/90 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden group">
+            
+            <!-- Encabezado de la tarjeta -->
+            <div class="p-5 pb-3 flex-1 flex flex-col">
+              
+              <div class="flex items-center justify-between gap-2 mb-2.5">
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                  isMix 
+                    ? 'bg-amber-100 text-amber-900 border border-amber-200' 
+                    : 'bg-brand-50 text-brand-800 border border-brand-100'
+                }">
+                  <i class="fa-solid ${isMix ? 'fa-star text-amber-500' : 'fa-tag'} text-[9px]"></i>
+                  ${product.categoria}
+                </span>
+
+                ${isMix ? '<span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Elaboración Propia</span>' : ''}
+              </div>
+
+              <!-- Nombre del Producto -->
+              <h3 class="font-bold font-display text-stone-900 text-lg leading-snug group-hover:text-brand-800 transition-colors">
+                ${product.producto}
+              </h3>
+
+              <!-- Contenido / Detalle del Mix -->
+              ${product.detalle ? `
+                <div class="mt-2.5 p-2.5 rounded-xl bg-warm-50 border border-warm-200/70 text-stone-600 text-xs leading-relaxed">
+                  <span class="font-semibold text-stone-800 block text-[11px] uppercase tracking-wide mb-0.5">
+                    <i class="fa-solid fa-mortar-pestle text-amber-600 mr-1"></i> Contenido / Ingredientes:
+                  </span>
+                  ${product.detalle}
+                </div>
+              ` : `
+                <p class="text-xs text-stone-400 mt-2 italic">Producto puro y seleccionado a granel.</p>
+              `}
+
+              <!-- Precio Dinámico -->
+              <div class="mt-auto pt-4">
+                <div class="flex items-baseline justify-between">
+                  <span class="text-xs text-stone-500 font-medium">Precio fraccionado:</span>
+                  <span class="price-display text-2xl font-black font-display text-brand-800">
+                    ${formatCurrency(currentPrice)}
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Selector de Peso y Agregar -->
+            <div class="p-4 pt-2 bg-stone-50/70 border-t border-stone-100 space-y-3">
+              
+              <!-- Selector Segmentado de Gramaje -->
+              <div class="bg-stone-200/70 p-1 rounded-xl flex items-center gap-1">
+                <button 
+                  type="button"
+                  data-weight="250"
+                  onclick="setProductWeight('${product.id}', 250)" 
+                  class="weight-btn flex-1 py-1.5 text-xs ${currentWeight === 250 ? 'font-bold rounded-lg bg-brand-700 text-white shadow-xs' : 'font-semibold rounded-lg text-stone-600 hover:bg-stone-100'} transition-all">
+                  250 gr
+                </button>
+                <button 
+                  type="button"
+                  data-weight="500"
+                  onclick="setProductWeight('${product.id}', 500)" 
+                  class="weight-btn flex-1 py-1.5 text-xs ${currentWeight === 500 ? 'font-bold rounded-lg bg-brand-700 text-white shadow-xs' : 'font-semibold rounded-lg text-stone-600 hover:bg-stone-100'} transition-all">
+                  500 gr
+                </button>
+                <button 
+                  type="button"
+                  data-weight="1000"
+                  onclick="setProductWeight('${product.id}', 1000)" 
+                  class="weight-btn flex-1 py-1.5 text-xs ${currentWeight === 1000 ? 'font-bold rounded-lg bg-brand-700 text-white shadow-xs' : 'font-semibold rounded-lg text-stone-600 hover:bg-stone-100'} transition-all">
+                  1 Kg
+                </button>
+              </div>
+
+              <!-- Botón Agregar al Carrito -->
+              <button 
+                type="button"
+                onclick="addToCart('${product.id}')" 
+                class="w-full py-2.5 px-4 bg-brand-700 hover:bg-brand-800 active:scale-[0.98] text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-plus text-sm"></i>
+                <span>Agregar al Carrito</span>
+              </button>
+
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // GESTIÓN DEL CARRITO DE COMPRAS
+    function addToCart(productId) {
+      const product = allProducts.find(p => p.id === productId);
+      if (!product) return;
+
+      const weight = selectedWeights[productId] || 250;
+      const price = getPriceForWeight(product, weight);
+
+      // Clave única combinando id y peso elegido
+      const cartItemId = `${productId}_${weight}`;
+      const existingItem = cart.find(item => item.cartItemId === cartItemId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          cartItemId,
+          productId: product.id,
+          producto: product.producto,
+          categoria: product.categoria,
+          weight: weight,
+          price: price,
+          quantity: 1
+        });
+      }
+
+      saveCartState();
+      updateCartSummary();
+      showToast(`¡"${product.producto}" (${weight >= 1000 ? '1 Kg' : weight + 'g'}) agregado!`);
+    }
+
+    function modifyCartItemQuantity(cartItemId, delta) {
+      const item = cart.find(i => i.cartItemId === cartItemId);
+      if (!item) return;
+
+      item.quantity += delta;
+      if (item.quantity <= 0) {
+        cart = cart.filter(i => i.cartItemId !== cartItemId);
+      }
+
+      saveCartState();
+      updateCartSummary();
+    }
+
+    function removeCartItem(cartItemId) {
+      cart = cart.filter(i => i.cartItemId !== cartItemId);
+      saveCartState();
+      updateCartSummary();
+    }
+
+    function clearCart() {
+      if (cart.length === 0) return;
+      cart = [];
+      saveCartState();
+      updateCartSummary();
+      showToast("Se vació el carrito.");
+    }
+
+    function saveCartState() {
+      try {
+        sessionStorage.setItem('puppy_cart', JSON.stringify(cart));
+      } catch (e) {}
+    }
+
+    function updateCartSummary() {
+      const badge = document.getElementById('cartBadge');
+      const countText = document.getElementById('cartItemsCountText');
+      const totalText = document.getElementById('cartTotalText');
+      const itemsList = document.getElementById('cartItemsList');
+
+      const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      badge.textContent = totalItemsCount;
+      countText.textContent = `${totalItemsCount} ${totalItemsCount === 1 ? 'producto' : 'productos'} seleccionados`;
+      totalText.textContent = formatCurrency(totalPrice);
+
+      // Renderizar listado dentro del cajón
+      if (cart.length === 0) {
+        itemsList.innerHTML = `
+          <div class="text-center py-16 px-4">
+            <div class="w-14 h-14 rounded-full bg-warm-100 text-stone-400 flex items-center justify-center mx-auto mb-3 text-2xl">
+              <i class="fa-solid fa-basket-shopping"></i>
+            </div>
+            <p class="font-bold text-stone-700 text-sm">Tu carrito está vacío</p>
+            <p class="text-xs text-stone-400 mt-1">Elegí productos del catálogo para comenzar tu pedido.</p>
+          </div>
+        `;
+        return;
+      }
+
+      itemsList.innerHTML = cart.map(item => {
+        const weightLabel = item.weight >= 1000 ? '1 Kg' : `${item.weight} gr`;
+        const itemSubtotal = item.price * item.quantity;
+
+        return `
+          <div class="py-3.5 flex items-center justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <h4 class="font-bold text-stone-800 text-xs sm:text-sm truncate">
+                ${item.producto}
+              </h4>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-[11px] font-semibold text-brand-700 bg-brand-50 px-2 py-0.5 rounded">
+                  ${weightLabel}
+                </span>
+                <span class="text-xs text-stone-500 font-medium">
+                  ${formatCurrency(item.price)} c/u
+                </span>
+              </div>
+            </div>
+
+            <!-- Controles de cantidad -->
+            <div class="flex items-center gap-2">
+              <div class="flex items-center border border-stone-200 rounded-lg bg-white overflow-hidden shadow-xs">
+                <button 
+                  onclick="modifyCartItemQuantity('${item.cartItemId}', -1)" 
+                  class="w-7 h-7 flex items-center justify-center text-stone-500 hover:bg-stone-100 active:bg-stone-200 text-xs">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span class="w-7 text-center font-bold text-xs text-stone-800">
+                  ${item.quantity}
+                </span>
+                <button 
+                  onclick="modifyCartItemQuantity('${item.cartItemId}', 1)" 
+                  class="w-7 h-7 flex items-center justify-center text-stone-500 hover:bg-stone-100 active:bg-stone-200 text-xs">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+
+              <div class="text-right min-w-[70px]">
+                <div class="text-xs font-bold text-stone-800">
+                  ${formatCurrency(itemSubtotal)}
+                </div>
+                <button 
+                  onclick="removeCartItem('${item.cartItemId}')" 
+                  class="text-[10px] text-stone-400 hover:text-red-500 transition-colors">
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ABRIR/CERRAR MODAL DE CARRITO
+    function toggleCartModal(show) {
+      const modal = document.getElementById('cartModal');
+      if (show) {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      } else {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    // ENVIAR PEDIDO POR WHATSAPP
+    function sendOrderViaWhatsApp() {
+      if (cart.length === 0) {
+        showToast("Tu carrito está vacío. Agregá productos para continuar.");
+        return;
+      }
+
+      const customerName = document.getElementById('orderCustomerName').value.trim();
+      const address = document.getElementById('orderAddress').value.trim();
+      const deliveryMethod = document.querySelector('input[name="deliveryMethod"]:checked')?.value || "Retiro en local";
+
+      if (!customerName) {
+        showToast("Por favor ingresá tu nombre para el pedido.");
+        document.getElementById('orderCustomerName').focus();
+        return;
+      }
+
+      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      // Formato prolijo del mensaje
+      let text = `🌱 *NUEVO PEDIDO - PUPPY DIETÉTICA*\n`;
+      text += `----------------------------------------\n`;
+      text += `👤 *Cliente:* ${customerName}\n`;
+      text += `🚚 *Modalidad:* ${deliveryMethod}\n`;
+      if (deliveryMethod === 'Envío a domicilio' && address) {
+        text += `📍 *Dirección:* ${address}\n`;
+      }
+      text += `----------------------------------------\n`;
+      text += `🛒 *DETALLE DEL PEDIDO:*\n\n`;
+
+      cart.forEach((item, idx) => {
+        const weightLabel = item.weight >= 1000 ? '1 Kg' : `${item.weight}g`;
+        const sub = item.price * item.quantity;
+        text += `${idx + 1}. *${item.producto}* (${weightLabel})\n`;
+        text += `   ${item.quantity} un. x ${formatCurrency(item.price)} = *${formatCurrency(sub)}*\n`;
+      });
+
+      text += `\n----------------------------------------\n`;
+      text += `💰 *TOTAL ESTIMADO: ${formatCurrency(totalPrice)}*\n`;
+      text += `----------------------------------------\n`;
+      text += `_Pedido generado desde la web de Puppy Dietética._`;
+
+      const whatsappUrl = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(text)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // FORMULARIO DE CONTACTO RÁPIDO
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('contactName').value;
+      const phone = document.getElementById('contactPhone').value;
+      const msg = document.getElementById('contactMsg').value;
+
+      const text = `Hola Puppy Dietética! Mi nombre es *${name}* (Tel: ${phone}).\nConsulta: ${msg}`;
+      const url = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+
+      e.target.reset();
+      showToast("¡Mensaje listo! Se abrirá WhatsApp para enviarlo.");
+    }
+
+    // TOAST NOTIFICATIONS
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toastNotification');
+      const msgEl = document.getElementById('toastMessage');
+      
+      msgEl.textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // SINCRONIZACIÓN Y PARSEO DE CSV (Para actualización rápida desde Google Sheets)
+    function openSyncModal() {
+      document.getElementById('syncModal').classList.remove('hidden');
+    }
+
+    function closeSyncModal() {
+      document.getElementById('syncModal').classList.add('hidden');
+    }
+
+    function handleCSVUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        try {
+          parseAndLoadCSV(text);
+          closeSyncModal();
+          showToast("¡Catálogo actualizado correctamente desde tu archivo!");
+        } catch (err) {
+          console.error(err);
+          showToast("Hubo un detalle al leer el CSV. Verificá las columnas.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function parseAndLoadCSV(csvText) {
+      const lines = csvText.split(/\r\n|\n/).filter(line => line.trim().length > 0);
+      if (lines.length < 2) return;
+
+      // Leer cabecera para mapear índices
+      const headers = parseCSVLine(lines[0]);
+      
+      const colCat = headers.findIndex(h => h.toLowerCase().includes('categoria'));
+      const colProd = headers.findIndex(h => h.toLowerCase().includes('producto'));
+      const colDet = headers.findIndex(h => h.toLowerCase().includes('mix') || h.toLowerCase().includes('detalle'));
+      const col250 = headers.findIndex(h => h.toLowerCase().includes('250'));
+      const col500 = headers.findIndex(h => h.toLowerCase().includes('500'));
+      const col1000 = headers.findIndex(h => h.toLowerCase().includes('1 kg') || h.toLowerCase().includes('1kg'));
+
+      const newProducts = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCSVLine(lines[i]);
+        if (row.length <= 1) continue;
+
+        const categoria = (colCat !== -1 && row[colCat]) ? row[colCat].trim() : "General";
+        const producto = (colProd !== -1 && row[colProd]) ? row[colProd].trim() : "";
+        const detalle = (colDet !== -1 && row[colDet]) ? row[colDet].trim() : "";
+        
+        if (!producto) continue;
+
+        const p250 = col250 !== -1 ? parsePrice(row[col250]) : 0;
+        const p500 = col500 !== -1 ? parsePrice(row[col500]) : (p250 * 1.9);
+        const p1000 = col1000 !== -1 ? parsePrice(row[col1000]) : (p250 * 3.6);
+
+        newProducts.push({
+          id: `custom-${i}`,
+          categoria: categoria || "Varios",
+          producto: producto,
+          detalle: detalle,
+          p250: p250,
+          p500: p500,
+          p1000: p1000
+        });
+      }
+
+      if (newProducts.length > 0) {
+        allProducts = newProducts;
+        renderCategories();
+        renderProducts();
+      }
+    }
+
+    function parseCSVLine(text) {
+      const values = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (c === '"') {
+          inQuotes = !inQuotes;
+        } else if (c === ',' && !inQuotes) {
+          values.push(current);
+          current = '';
+        } else {
+          current += c;
+        }
+      }
+      values.push(current);
+      return values.map(v => v.replace(/^"|"$/g, '').trim());
+    }
+
+    function parsePrice(str) {
+      if (!str) return 0;
+      // Remueve símbolos '$', puntos de miles y cambia coma decimal
+      const clean = str.replace(/[$\s.]/g, '').replace(',', '.');
+      const val = parseFloat(clean);
+      return isNaN(val) ? 0 : Math.round(val);
+    }
+  </script>
+
+</body>
+</html>
