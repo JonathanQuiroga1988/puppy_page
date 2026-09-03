@@ -824,26 +824,36 @@
     });
 
     // PARSEO DEL CSV DIRECTO DE GOOGLE SHEETS
-    // Columnas esperadas: Categoria | Producto | Contenido del Mix / Detalle | Precio x 250gr | Precio x 500gr | Precio x 1 kg
+    // Columnas usadas: Categoria | Producto | Contenido del Mix / Detalle | Precio x 250gr | Precio x 500gr | Precio x 1 kg
     function parseSheetCSV(csvText) {
       const lines = csvText.split(/\r\n|\n/).filter(l => l.trim().length > 0);
       if (lines.length < 2) return [];
 
       const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
 
-      // Mapear columnas por nombre (flexible ante reordenamientos)
+      // Mapear columnas con nombres exactos del Sheet real
       const idx = {
-        categoria: headers.findIndex(h => h.includes('categor')),
-        producto:  headers.findIndex(h => h.includes('producto')),
+        categoria: headers.findIndex(h => h === 'categoria'),
+        producto:  headers.findIndex(h => h === 'producto'),
         detalle:   headers.findIndex(h => h.includes('detalle') || h.includes('mix')),
-        p250:      headers.findIndex(h => h.includes('250')),
-        p500:      headers.findIndex(h => h.includes('500')),
-        p1000:     headers.findIndex(h => h.includes('1') && (h.includes('kg') || h.includes('kilo') || h.includes('1000') || h.includes('1 kg'))),
+        p250:      headers.findIndex(h => h.includes('precio') && h.includes('250')),
+        p500:      headers.findIndex(h => h.includes('precio') && h.includes('500')),
+        p1000:     headers.findIndex(h => h.includes('precio') && h.includes('1')),
         destacado: headers.findIndex(h => h.includes('destac'))
       };
 
       // Si no encontró columnas mínimas, abortar
       if (idx.categoria < 0 || idx.producto < 0 || idx.p250 < 0) return [];
+
+      // Parsea precios en formato argentino: "$6.700,00" → 6700
+      const clean = v => {
+        const s = (v || '0').toString()
+          .replace(/\$/g, '')   // quitar signo pesos
+          .replace(/\./g, '')   // quitar separador de miles
+          .split(',')[0]        // descartar decimales
+          .trim();
+        return parseInt(s) || 0;
+      };
 
       const products = [];
       for (let i = 1; i < lines.length; i++) {
@@ -852,16 +862,14 @@
         const producto  = (row[idx.producto]  || '').trim();
         if (!categoria || !producto) continue;
 
-        const clean = v => parseInt((v || '0').toString().replace(/[^\d]/g, '')) || 0;
-
         products.push({
           id:        `sheet-${i}`,
           categoria,
           producto,
-          detalle:   idx.detalle >= 0 ? (row[idx.detalle] || '').trim() : '',
-          p250:      clean(row[idx.p250]),
-          p500:      idx.p500  >= 0 ? clean(row[idx.p500])  : 0,
-          p1000:     idx.p1000 >= 0 ? clean(row[idx.p1000]) : 0,
+          detalle:   idx.detalle   >= 0 ? (row[idx.detalle]   || '').trim() : '',
+          p250:                            clean(row[idx.p250]),
+          p500:      idx.p500      >= 0 ? clean(row[idx.p500])               : 0,
+          p1000:     idx.p1000     >= 0 ? clean(row[idx.p1000])              : 0,
           destacado: idx.destacado >= 0 ? (row[idx.destacado] || '').toLowerCase().includes('si') : (categoria === 'MIX')
         });
       }
