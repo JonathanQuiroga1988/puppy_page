@@ -567,6 +567,10 @@
   <script>
     // Configuración general
     const STORE_WHATSAPP = "5491100000000"; // Reemplazar con el número real de WhatsApp de Puppy
+
+    // URL de exportación CSV del Google Sheet (se actualiza automáticamente con cada edición)
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1RRqVDzcw1S2_U6-IWKTR9uM7-W7xPRiQZjkUELR7CI4/export?format=csv&gid=1018477642";
+
     document.getElementById('yearSpan').textContent = new Date().getFullYear();
 
     // DATOS DE PRODUCTOS EXTRAÍDOS DE LA PLANILLA DE GOOGLE SHEETS
@@ -786,7 +790,7 @@
     };
 
     // INICIALIZACIÓN
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       // Recuperar carrito guardado en memoria de sesión si existiese
       try {
         const savedCart = sessionStorage.getItem('puppy_cart');
@@ -795,10 +799,76 @@
         }
       } catch (e) {}
 
+      // Intentar cargar productos desde Google Sheets automáticamente
+      try {
+        const response = await fetch(SHEET_CSV_URL);
+        if (response.ok) {
+          const csvText = await response.text();
+          const sheetProducts = parseSheetCSV(csvText);
+          if (sheetProducts && sheetProducts.length > 0) {
+            allProducts = sheetProducts;
+            console.log(`✅ Catálogo cargado desde Google Sheets: ${sheetProducts.length} productos`);
+          } else {
+            console.warn("⚠️ Google Sheets devolvió datos vacíos, usando catálogo local.");
+          }
+        } else {
+          console.warn("⚠️ No se pudo acceder al Sheet, usando catálogo local.");
+        }
+      } catch (err) {
+        console.warn("⚠️ Sin conexión al Sheet, usando catálogo local:", err.message);
+      }
+
       renderCategories();
       renderProducts();
       updateCartSummary();
     });
+
+    // PARSEO DEL CSV DIRECTO DE GOOGLE SHEETS
+    // Columnas esperadas: Categoria | Producto | Contenido del Mix / Detalle | Precio x 250gr | Precio x 500gr | Precio x 1 kg
+    function parseSheetCSV(csvText) {
+      const lines = csvText.split(/\r\n|\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 2) return [];
+
+      const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+
+      // Mapear columnas por nombre (flexible ante reordenamientos)
+      const idx = {
+        categoria: headers.findIndex(h => h.includes('categor')),
+        producto:  headers.findIndex(h => h.includes('producto')),
+        detalle:   headers.findIndex(h => h.includes('detalle') || h.includes('mix')),
+        p250:      headers.findIndex(h => h.includes('250')),
+        p500:      headers.findIndex(h => h.includes('500')),
+        p1000:     headers.findIndex(h => h.includes('1') && (h.includes('kg') || h.includes('kilo') || h.includes('1000') || h.includes('1 kg'))),
+        destacado: headers.findIndex(h => h.includes('destac'))
+      };
+
+      // Si no encontró columnas mínimas, abortar
+      if (idx.categoria < 0 || idx.producto < 0 || idx.p250 < 0) return [];
+
+      const products = [];
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCSVLine(lines[i]);
+        const categoria = (row[idx.categoria] || '').trim();
+        const producto  = (row[idx.producto]  || '').trim();
+        if (!categoria || !producto) continue;
+
+        const clean = v => parseInt((v || '0').toString().replace(/[^\d]/g, '')) || 0;
+
+        products.push({
+          id:        `sheet-${i}`,
+          categoria,
+          producto,
+          detalle:   idx.detalle >= 0 ? (row[idx.detalle] || '').trim() : '',
+          p250:      clean(row[idx.p250]),
+          p500:      idx.p500  >= 0 ? clean(row[idx.p500])  : 0,
+          p1000:     idx.p1000 >= 0 ? clean(row[idx.p1000]) : 0,
+          destacado: idx.destacado >= 0 ? (row[idx.destacado] || '').toLowerCase().includes('si') : (categoria === 'MIX')
+        });
+      }
+      return products;
+    }
+
+
 
     // RENDERIZADO DE CATEGORÍAS
     function renderCategories() {
